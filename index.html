@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wszystkiego Najlepszego!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Poppins:wght@300;400;600;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Poppins:wght@300;400;600;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
             --purple-light: #d8b4fe;
@@ -191,7 +191,7 @@
                 else if (restrictedCommands.includes(cmdBase)) { termOutput.appendChild(createTermLine(`<span style="color: var(--term-red)">bash: ${cmdBase}: Odmowa dostępu. Brak wystarczających uprawnień. Zgłoszono incydent do administratora!</span>`)); }
                 else if (lowerVal === 'ls') { termOutput.appendChild(createTermLine("prezent.sh  readme.txt  tajne_dane.txt  skaner.sh", "term-sys")); } 
                 else if (lowerVal === 'ls -a' || lowerVal === 'ls -al' || lowerVal === 'ls -la') { termOutput.appendChild(createTermLine(".  ..  .flower  prezent.sh  readme.txt  tajne_dane.txt  skaner.sh", "term-sys")); }
-                else if (lowerVal === 'cat readme.txt') { termOutput.appendChild(createTermLine("Wpisz 'get' aby odebrać specjalny plakat Spotify Wrapped. W systemie ukryty jest też prezent (prezent.sh).", "term-sys")); }
+                else if (lowerVal === 'cat readme.txt') { termOutput.appendChild(createTermLine("Wpisz 'get' aby wygenerować kartę statystyk z tego roku. W systemie ukryty jest też prezent (prezent.sh).", "term-sys")); }
                 else if (lowerVal === 'cat tajne_dane.txt') {
                     const extraWishes = `<div style="text-align: center; margin: 20px 0; width: 100%;">
                         <div style="color: var(--term-green); margin-bottom: 15px; font-size: 1.1rem;">Dużo zdrówka, mało stresu, darmowej pizzy i żeby bugi same się naprawiały!</div>
@@ -211,80 +211,64 @@
                     inputWrapper.style.display = 'flex'; cmdInput.focus();
                 }
                 else if (lowerVal === 'get') {
-                    termOutput.appendChild(createTermLine("Generowanie Nowoczesnego Podsumowania Roku (Wrapped Edition)... ⏳", "term-sys"));
+                    termOutput.appendChild(createTermLine("Generowanie Systemowego Raportu 2026... ⏳", "term-sys"));
                     autoScroll();
             
                     const cvs = document.createElement('canvas'); cvs.width = 1080; cvs.height = 1920; const ctx = cvs.getContext('2d');
             
-                    // --- 1. Nowoczesne Tło (Aurora Gradient) ---
-                    ctx.fillStyle = '#0a0014';
+                    // Tło minimalistyczne, bardzo ciemne
+                    const grad = ctx.createLinearGradient(0, 0, 0, 1920);
+                    grad.addColorStop(0, '#06020a');
+                    grad.addColorStop(1, '#11051c');
+                    ctx.fillStyle = grad; 
                     ctx.fillRect(0, 0, 1080, 1920);
-
-                    const addGlow = (x, y, r, color) => {
-                        const radGrad = ctx.createRadialGradient(x, y, 0, x, y, r);
-                        radGrad.addColorStop(0, color);
-                        radGrad.addColorStop(1, 'rgba(0,0,0,0)');
-                        ctx.fillStyle = radGrad;
-                        ctx.fillRect(0, 0, 1080, 1920);
-                    };
-                    addGlow(150, 300, 800, 'rgba(192, 38, 211, 0.45)'); // Różowy neon
-                    addGlow(900, 1500, 900, 'rgba(16, 185, 129, 0.35)'); // Zielony neon
-                    addGlow(800, -50, 700, 'rgba(107, 33, 168, 0.5)'); // Fiolet
-
-                    // Kropki w tle (subtelny wzór grid)
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
-                    for(let x = 0; x < 1080; x += 45) {
-                        for(let y = 0; y < 1920; y += 45) {
-                            ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill();
-                        }
-                    }
-
-                    // --- 2. Nowoczesny Nagłówek ---
-                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                    
-                    // Pigułka "WRAPPED 2026"
-                    ctx.fillStyle = '#c026d3';
-                    ctx.beginPath();
-                    if(ctx.roundRect) ctx.roundRect(390, 100, 300, 70, 35);
-                    else ctx.fillRect(390, 100, 300, 70); // Fallback
-                    ctx.fill();
-                    
-                    ctx.fillStyle = '#ffffff'; 
-                    ctx.font = 'bold 32px Poppins, sans-serif'; 
-                    ctx.fillText('WRAPPED 2026', 540, 137);
-
-                    ctx.font = '900 85px Poppins, sans-serif'; 
-                    ctx.fillText('TEN ROK', 540, 260);
-                    ctx.fillStyle = '#d8b4fe'; 
-                    ctx.font = 'bold 50px Poppins, sans-serif'; 
-                    ctx.fillText('NALEŻAŁ DO CIEBIE!', 540, 340);
             
-                    // --- 3. Ładowanie i Idealne Kadrowanie Zdjęcia ---
+                    // Subtelna, technologiczna siatka w tle (grid)
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+                    ctx.lineWidth = 1;
+                    for(let i = 0; i < 1080; i += 60) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 1920); ctx.stroke(); }
+                    for(let i = 0; i < 1920; i += 60) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(1080, i); ctx.stroke(); }
+            
+                    // Minimalistyczny, nowoczesny nagłówek
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '900 95px Poppins, sans-serif'; 
+                    ctx.fillText('LEVEL UP: 2026', 540, 180);
+                    
+                    ctx.fillStyle = '#10b981'; // hakerski zielony
+                    ctx.font = '600 35px Fira Code, monospace'; 
+                    ctx.fillText('> SYSTEM_UPDATE_COMPLETE', 540, 280);
+            
                     const img = new Image(); 
                     img.src = 'ok.jpg';
                     img.onload = () => {
-                        const cx = 540; const cy = 720; const radius = 280;
-
-                        // Rysowanie świetlistej ramki zdjęcia
+                        const cx = 540; const cy = 700; const radius = 300;
+            
+                        // Geometryczny tech-ring wokół zdjęcia
+                        ctx.save();
+                        ctx.beginPath(); ctx.arc(cx, cy, radius + 25, 0, Math.PI * 2);
+                        ctx.strokeStyle = '#a855f7';
+                        ctx.lineWidth = 3;
+                        ctx.setLineDash([15, 20]);
+                        ctx.stroke();
+                        ctx.restore();
+            
+                        // Ramka dla zdjęcia
                         ctx.save(); 
                         ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2, true); ctx.closePath();
-                        ctx.lineWidth = 18; 
-                        ctx.strokeStyle = '#c026d3'; 
-                        ctx.shadowColor = '#c026d3'; 
-                        ctx.shadowBlur = 40; 
+                        ctx.lineWidth = 6; 
+                        ctx.strokeStyle = '#ffffff'; 
                         ctx.stroke(); 
                         
-                        // Clipping mask do zdjęcia
                         ctx.clip(); 
-                        ctx.shadowBlur = 0; // Reset cienia do samego obrazka
-
-                        // Obliczanie proporcji (object-fit: cover)
+            
+                        // Rysowanie z object-fit cover
                         const imgRatio = img.width / img.height;
                         let drawWidth = radius * 2;
                         let drawHeight = radius * 2;
                         let drawX = cx - radius;
                         let drawY = cy - radius;
-
+            
                         if (imgRatio > 1) { 
                             drawWidth = drawHeight * imgRatio;
                             drawX = cx - (drawWidth / 2);
@@ -292,51 +276,55 @@
                             drawHeight = drawWidth / imgRatio;
                             drawY = cy - (drawHeight / 2);
                         }
-
+            
                         ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight); 
                         ctx.restore();
             
-                        // --- 4. Nowoczesne Karty Statystyk ---
-                        ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-                        ctx.fillStyle = '#ffffff'; 
-                        ctx.font = 'bold 55px Poppins, sans-serif'; 
-                        ctx.fillText('Twoje Statystyki:', 120, 1100);
-
+                        // Sekcja minimalistycznych statystyk (clean lines)
+                        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+                        ctx.fillStyle = '#d8b4fe'; 
+                        ctx.font = '700 45px Poppins, sans-serif'; 
+                        ctx.fillText('USER_STATS:', 150, 1140);
+            
                         const stats = [
-                            { icon: '🐛', text: 'Wyłapane Bugi: OVER 9000', color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)' },
-                            { icon: '🌸', text: 'Odcinki Anime: Niezliczone', color: '#f472b6', bg: 'rgba(244, 114, 182, 0.15)' },
-                            { icon: '🎧', text: 'Czas z muzyką: 999,999 min', color: '#d8b4fe', bg: 'rgba(216, 180, 254, 0.15)' },
-                            { icon: '🚀', text: 'Zajebistość: Infinity', color: '#c026d3', bg: 'rgba(192, 38, 211, 0.15)' }
+                            { icon: '🐛', text: 'Bugi naprawione', val: 'OVER 9000' },
+                            { icon: '🌸', text: 'Obejrzane Anime', val: 'NIEZLICZONE' },
+                            { icon: '🎧', text: 'K-Pop Playtime', val: '999k MIN' },
+                            { icon: '🚀', text: 'Zajebistość', val: 'INFINITY' }
                         ];
-
-                        let startY = 1200;
+            
+                        let startY = 1240;
                         stats.forEach((stat) => {
-                            // Tło karty
-                            ctx.fillStyle = stat.bg;
-                            ctx.beginPath();
-                            if(ctx.roundRect) ctx.roundRect(120, startY, 840, 100, 25);
-                            else ctx.fillRect(120, startY, 840, 100);
-                            ctx.fill();
+                            // Cienka biała linia oddzielająca
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                            ctx.fillRect(150, startY, 780, 2);
                             
-                            // Tekst
-                            ctx.fillStyle = stat.color;
-                            ctx.font = '600 42px Poppins, sans-serif';
-                            ctx.fillText(`${stat.icon} ${stat.text}`, 160, startY + 28);
-                            startY += 135;
+                            // Ikona i tekst (po lewej)
+                            ctx.fillStyle = '#ffffff';
+                            ctx.font = '400 40px Poppins, sans-serif';
+                            ctx.fillText(`${stat.icon}  ${stat.text}`, 150, startY + 50);
+                            
+                            // Wartość (po prawej, czcionka z kodowania)
+                            ctx.textAlign = 'right';
+                            ctx.fillStyle = '#10b981';
+                            ctx.font = '600 40px Fira Code, monospace';
+                            ctx.fillText(stat.val, 930, startY + 50);
+                            ctx.textAlign = 'left';
+            
+                            startY += 110;
                         });
             
-                        // --- 5. Dolny pasek (Zakończenie) ---
+                        // Minimalistyczny dolny napis
                         ctx.textAlign = 'center'; 
-                        ctx.fillStyle = '#ffffff'; 
-                        ctx.font = 'bold 42px Poppins, sans-serif'; 
-                        ctx.fillText('Jesteś w 1% najlepszych sióstr na świecie! ❤️', 540, 1810);
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'; 
+                        ctx.font = '300 35px Poppins, sans-serif'; 
+                        ctx.fillText('STATUS: W 1% NAJLEPSZYCH SIÓSTR NA ŚWIECIE ❤️', 540, 1800);
             
-                        // Pobieranie
                         try {
-                            const link = document.createElement('a'); link.download = 'Urodzinowe_Wrapped_2026.png'; link.href = cvs.toDataURL('image/png'); link.click();
-                            termOutput.appendChild(createTermLine("Sukces! Pomyślnie pobrano plik Urodzinowe_Wrapped_2026.png 🎁 Sprawdź pobrane pliki!", "term-green")); 
+                            const link = document.createElement('a'); link.download = 'Urodzinowe_Stats_2026.png'; link.href = cvs.toDataURL('image/png'); link.click();
+                            termOutput.appendChild(createTermLine("Sukces! Pomyślnie pobrano plik Urodzinowe_Stats_2026.png 🎁", "term-green")); 
                         } catch (error) {
-                            termOutput.appendChild(createTermLine("Błąd pobierania (blokada przeglądarki). Otwórz stronę przez serwer (np. Live Server) lub wrzuć na GitHub Pages, aby pobieranie zadziałało!", "term-red"));
+                            termOutput.appendChild(createTermLine("Błąd pobierania (blokada przeglądarki). Uruchom przez Live Server!", "term-red"));
                         }
                         autoScroll();
                     };

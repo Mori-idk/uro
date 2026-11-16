@@ -16,7 +16,17 @@
             --bg-color: #080010;
         }
 
-        body { margin: 0; overflow: hidden; background-color: var(--bg-color); font-family: 'Poppins', sans-serif; color: white; user-select: none; transition: background-color 1s ease; height: 100vh; width: 100vw; }
+        body { margin: 0; overflow: hidden; background-color: var(--bg-color); font-family: 'Poppins', sans-serif; color: white; user-select: none; transition: background-color 1s ease, --purple-neon 1s ease; height: 100vh; width: 100vw; }
+
+        /* MOTYW GOD MODE (ZŁOTY/NEON) */
+        body.god-mode {
+            --purple-light: #fef08a;
+            --purple-main: #eab308;
+            --purple-dark: #a16207;
+            --purple-neon: #eab308;
+            --term-green: #fde047;
+            --bg-color: #1a1500;
+        }
 
         #matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 1; transition: opacity 2s ease-in; }
 
@@ -26,7 +36,7 @@
             display: flex; justify-content: center; align-items: center; 
             padding: clamp(10px, 4vw, 3rem); 
             transition: opacity 1s ease-in-out; 
-            background: rgba(0, 0, 0, 0.4); /* Przyciemnienie Matrixa z tyłu */
+            background: rgba(0, 0, 0, 0.4); 
         }
 
         .terminal-window {
@@ -40,6 +50,13 @@
             display: flex; flex-direction: column;
             overflow: hidden;
             position: relative;
+            transition: border-color 1s ease, box-shadow 1s ease;
+        }
+
+        body.god-mode .terminal-window {
+            border-color: rgba(250, 204, 21, 0.6);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 40px rgba(250, 204, 21, 0.3);
+            background: rgba(15, 10, 0, 0.85);
         }
 
         .terminal-header {
@@ -48,8 +65,14 @@
             display: flex; align-items: center;
             border-bottom: 1px solid rgba(168, 85, 247, 0.3);
             z-index: 10;
+            transition: background 1s ease, border-color 1s ease;
         }
         
+        body.god-mode .terminal-header {
+            background: rgba(30, 20, 0, 0.95);
+            border-bottom-color: rgba(250, 204, 21, 0.4);
+        }
+
         .terminal-buttons { display: flex; gap: 8px; width: 60px; }
         .terminal-buttons span { width: 13px; height: 13px; border-radius: 50%; }
         .terminal-buttons span:nth-child(1) { background: #ff5f56; box-shadow: 0 0 5px #ff5f56; }
@@ -58,9 +81,10 @@
         
         .terminal-title { 
             flex-grow: 1; text-align: center; 
-            color: #d8b4fe; font-family: 'Fira Code', monospace; 
+            color: var(--purple-light); font-family: 'Fira Code', monospace; 
             font-size: 0.85rem; letter-spacing: 1px; font-weight: 600;
-            margin-right: 60px; /* Balans dla przycisków */
+            margin-right: 60px; 
+            transition: color 1s ease;
         }
 
         .terminal-body {
@@ -71,7 +95,6 @@
             z-index: 5;
         }
 
-        /* Scanlines CRT Effect */
         .scanlines {
             position: absolute; inset: 0; pointer-events: none; z-index: 8;
             background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
@@ -80,7 +103,7 @@
         }
         /* ================================================= */
 
-        .terminal-line { color: var(--term-green); font-size: clamp(0.9rem, 2.5vw, 1.1rem); margin-bottom: 0.5rem; text-shadow: 0 0 5px var(--term-green); word-break: break-word; line-height: 1.4; }
+        .terminal-line { color: var(--term-green); font-size: clamp(0.9rem, 2.5vw, 1.1rem); margin-bottom: 0.5rem; text-shadow: 0 0 5px var(--term-green); word-break: break-word; line-height: 1.4; transition: color 1s ease, text-shadow 1s ease; }
         .term-red { color: var(--term-red); text-shadow: 0 0 8px var(--term-red); font-weight: bold; }
         .term-sys { color: var(--purple-light); text-shadow: 0 0 5px var(--purple-main); }
         .term-pink { color: #f472b6; text-shadow: 0 0 5px #f472b6; font-weight: bold; }
@@ -89,14 +112,14 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         .input-wrapper { display: none; align-items: center; width: 100%; margin-top: 0.5rem; padding-bottom: 2rem; }
-        .prompt { color: var(--purple-neon); text-shadow: 0 0 5px var(--purple-neon); margin-right: 0.8rem; white-space: nowrap; font-size: clamp(0.9rem, 2.5vw, 1.1rem); }
+        .prompt { color: var(--purple-neon); text-shadow: 0 0 5px var(--purple-neon); margin-right: 0.8rem; white-space: nowrap; font-size: clamp(0.9rem, 2.5vw, 1.1rem); transition: color 1s ease, text-shadow 1s ease; }
         #cmd-input { background: transparent; border: none; color: white; font-family: 'Fira Code', monospace; font-size: clamp(0.9rem, 2.5vw, 1.1rem); outline: none; flex-grow: 1; text-shadow: 0 0 5px white; width: 100%; }
 
         #card-screen { position: absolute; inset: 0; z-index: 50; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 1.5s ease-in-out; padding: 1rem; }
         .glass-card { position: relative; background: rgba(25, 10, 35, 0.5); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 40px rgba(168, 85, 247, 0.3), inset 0 0 20px rgba(168, 85, 247, 0.1); border-radius: 24px; padding: clamp(2rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3rem); width: 100%; max-width: 850px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2rem; transform: translateY(20px); transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         #card-screen.visible .glass-card { transform: translateY(0); }
 
-        .glitch-title { font-family: 'Press Start 2P', cursive; font-size: clamp(1.2rem, 4vw, 2.2rem); color: #fff; text-shadow: 0 0 10px var(--purple-neon), 0 0 20px var(--purple-neon); line-height: 1.6; position: relative; display: inline-block; }
+        .glitch-title { font-family: 'Press Start 2P', cursive; font-size: clamp(1.2rem, 4vw, 2.2rem); color: #fff; text-shadow: 0 0 10px var(--purple-neon), 0 0 20px var(--purple-neon); line-height: 1.6; position: relative; display: inline-block; transition: text-shadow 1s ease; }
         .glitch-title:hover { animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite; }
         @keyframes glitch-skew { 0% { transform: skew(0deg); } 20% { transform: skew(-10deg); text-shadow: -2px 0 #0ff, 2px 0 #f0f; } 40% { transform: skew(10deg); text-shadow: 2px 0 #0ff, -2px 0 #f0f; } 60% { transform: skew(-5deg); text-shadow: -1px 0 #0ff, 1px 0 #f0f; } 80% { transform: skew(5deg); text-shadow: 1px 0 #0ff, -1px 0 #f0f; } 100% { transform: skew(0deg); } }
 
@@ -108,23 +131,23 @@
         .kpop-btn { background: rgba(10, 5, 20, 0.7); border: 2px solid var(--purple-main); border-radius: 9999px; padding: clamp(10px, 3vw, 15px) clamp(20px, 5vw, 35px); display: inline-flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); transition: all 0.3s ease; cursor: pointer; color: white; font-weight: 500; font-size: clamp(0.85rem, 2vw, 1rem); }
         .kpop-btn:hover { box-shadow: 0 0 25px var(--purple-neon); background: rgba(168, 85, 247, 0.25); transform: scale(1.05); }
 
-        .mini-terminal { background: rgba(5, 0, 10, 0.8); border: 1px solid var(--purple-main); border-radius: 8px; padding: 10px 15px; display: flex; align-items: center; width: 100%; max-width: 400px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 0 15px rgba(168, 85, 247, 0.3); margin-top: 10px; }
-        #mini-cmd-input { background: transparent; border: none; color: var(--term-green); font-family: 'Fira Code', monospace; font-size: clamp(0.8rem, 2vw, 1rem); outline: none; flex-grow: 1; width: 100%; }
-        #mini-cmd-input::placeholder { color: rgba(16, 185, 129, 0.4); }
+        .mini-terminal { background: rgba(5, 0, 10, 0.8); border: 1px solid var(--purple-main); border-radius: 8px; padding: 10px 15px; display: flex; align-items: center; width: 100%; max-width: 400px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 0 15px rgba(168, 85, 247, 0.3); margin-top: 10px; transition: border-color 1s ease, box-shadow 1s ease; }
+        #mini-cmd-input { background: transparent; border: none; color: var(--term-green); font-family: 'Fira Code', monospace; font-size: clamp(0.8rem, 2vw, 1rem); outline: none; flex-grow: 1; width: 100%; transition: color 1s ease; }
+        #mini-cmd-input::placeholder { color: rgba(255, 255, 255, 0.3); }
 
         /* Wirtualny Kotek - Hakerski Pixel-Style */
-        #virtual-cat { position: absolute; bottom: clamp(15px, 4vw, 30px); right: clamp(15px, 4vw, 30px); font-size: clamp(1.2rem, 3vw, 1.8rem); cursor: pointer; z-index: 60; color: #f472b6; font-family: 'Fira Code', monospace; font-weight: bold; text-shadow: 0 0 10px var(--purple-neon); user-select: none; }
+        #virtual-cat { position: absolute; bottom: clamp(15px, 4vw, 30px); right: clamp(15px, 4vw, 30px); font-size: clamp(1.2rem, 3vw, 1.8rem); cursor: pointer; z-index: 60; color: #f472b6; font-family: 'Fira Code', monospace; font-weight: bold; text-shadow: 0 0 10px var(--purple-neon); user-select: none; transition: text-shadow 1s ease; }
         #cat-face { transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: inline-block; }
         #virtual-cat:hover #cat-face, #virtual-cat.active #cat-face { transform: scale(1.15) rotate(-10deg); color: #fff; }
-        .cat-message { position: absolute; bottom: 100%; right: 50%; transform: translate(50%, 10px); background: rgba(20, 5, 30, 0.95); color: #f472b6; padding: 8px 15px; border-radius: 12px; border: 2px solid var(--purple-neon); font-size: clamp(0.75rem, 2vw, 0.9rem); font-family: 'Poppins', sans-serif; font-weight: bold; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s; box-shadow: 0 0 15px var(--purple-neon); }
-        .cat-message::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border-width: 8px; border-style: solid; border-color: var(--purple-neon) transparent transparent transparent; }
+        .cat-message { position: absolute; bottom: 100%; right: 50%; transform: translate(50%, 10px); background: rgba(20, 5, 30, 0.95); color: #f472b6; padding: 8px 15px; border-radius: 12px; border: 2px solid var(--purple-neon); font-size: clamp(0.75rem, 2vw, 0.9rem); font-family: 'Poppins', sans-serif; font-weight: bold; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s, border-color 1s ease, box-shadow 1s ease; box-shadow: 0 0 15px var(--purple-neon); }
+        .cat-message::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border-width: 8px; border-style: solid; border-color: var(--purple-neon) transparent transparent transparent; transition: border-color 1s ease; }
         .cat-message.show { opacity: 1; transform: translate(50%, -15px); animation: floatNya 1.5s infinite ease-in-out alternate; }
         @keyframes floatNya { 0% { transform: translate(50%, -15px); } 100% { transform: translate(50%, -22px); } }
 
         #custom-modal, #game-modal, #cake-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 1rem; }
         #custom-modal { z-index: 10000; } 
         #custom-modal.active, #game-modal.active, #cake-modal.active { opacity: 1; pointer-events: auto; }
-        .modal-box { background: rgba(20, 5, 30, 0.95); border: 2px solid var(--purple-neon); box-shadow: 0 0 30px var(--purple-neon); padding: 2.5rem 2rem; border-radius: 16px; max-width: 550px; width: 100%; text-align: center; transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
+        .modal-box { background: rgba(20, 5, 30, 0.95); border: 2px solid var(--purple-neon); box-shadow: 0 0 30px var(--purple-neon); padding: 2.5rem 2rem; border-radius: 16px; max-width: 550px; width: 100%; text-align: center; transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 1s ease, box-shadow 1s ease; display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
         #custom-modal.active .modal-box, #game-modal.active .modal-box, #cake-modal.active .modal-box { transform: scale(1); }
         .modal-text { font-family: 'Press Start 2P', cursive; font-size: clamp(0.7rem, 2vw, 0.9rem); color: #fff; line-height: 1.6; }
         .modal-btn { background: var(--purple-main); color: white; border: none; padding: 10px 24px; border-radius: 8px; font-family: 'Poppins', sans-serif; font-weight: bold; cursor: pointer; transition: all 0.2s; align-self: center; }
@@ -135,8 +158,8 @@
         .memory-card { aspect-ratio: 1 / 1; background: transparent; cursor: pointer; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); }
         .memory-card.flipped { transform: rotateY(180deg); }
         .memory-card-front, .memory-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; justify-content: center; align-items: center; border-radius: 12px; font-size: clamp(1.5rem, 5vw, 2.5rem); box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
-        .memory-card-back { background: rgba(168, 85, 247, 0.2); border: 2px solid var(--purple-main); color: var(--purple-light); }
-        .memory-card-front { background: rgba(168, 85, 247, 0.8); border: 2px solid var(--purple-neon); transform: rotateY(180deg); }
+        .memory-card-back { background: rgba(168, 85, 247, 0.2); border: 2px solid var(--purple-main); color: var(--purple-light); transition: border-color 1s ease, color 1s ease, background 1s ease; }
+        .memory-card-front { background: rgba(168, 85, 247, 0.8); border: 2px solid var(--purple-neon); transform: rotateY(180deg); transition: border-color 1s ease, background 1s ease; }
         .memory-card.matched .memory-card-front { background: rgba(16, 185, 129, 0.5); border-color: var(--term-green); }
 
         /* Cake & Candles */
@@ -160,7 +183,7 @@
         @keyframes floatUp { 0% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-30px) rotate(5deg); } 100% { transform: translateY(0) rotate(-5deg); } }
 
         pre.ascii-art { font-family: 'Fira Code', monospace; line-height: 1.2; white-space: pre-wrap; margin: 10px 0; font-size: clamp(0.8rem, 2vw, 1.1rem); }
-        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); } ::-webkit-scrollbar-thumb { background: var(--purple-main); border-radius: 4px; }
+        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); } ::-webkit-scrollbar-thumb { background: var(--purple-main); border-radius: 4px; transition: background 1s ease; }
     </style>
 </head>
 <body>
@@ -172,13 +195,13 @@
                 <div class="terminal-buttons">
                     <span></span><span></span><span></span>
                 </div>
-                <div class="terminal-title">banger-os — bash — 80x24</div>
+                <div class="terminal-title" id="window-title">banger-os — bash — 80x24</div>
             </div>
             <div class="terminal-body" onclick="if(document.getElementById('input-wrapper').style.display !== 'none') document.getElementById('cmd-input').focus()">
                 <div class="scanlines"></div>
                 <div id="term-output"></div>
                 <div class="input-wrapper" id="input-wrapper">
-                    <span class="prompt">root@bro:~$</span>
+                    <span class="prompt" id="prompt-txt">root@bro:~$</span>
                     <input type="text" id="cmd-input" autocomplete="off" spellcheck="false" autofocus>
                 </div>
             </div>
@@ -197,14 +220,14 @@
             </div>
 
             <div class="mini-terminal">
-                <span class="prompt">root@bro:~$</span>
+                <span class="prompt" id="mini-prompt">root@bro:~$</span>
                 <input type="text" id="mini-cmd-input" autocomplete="off" spellcheck="false" placeholder="Wpisz 'exit' aby wrócić...">
             </div>
 
             <!-- Interaktywny Kotek CSS -->
             <div id="virtual-cat" onclick="pokeCat()" title="Pogłaszcz mnie!">
                 <div id="cat-face">(=^･ω･^=)</div>
-                <div class="cat-message" id="cat-msg">Miau! 💖</div>
+                <div class="cat-message" id="cat-msg">Miau!💖</div>
             </div>
         </div>
     </div>
@@ -235,17 +258,23 @@
         const canvas = document.getElementById('matrix-canvas'); const ctx = canvas.getContext('2d');
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas); resizeCanvas();
-        let isKawaiiMode = false; let chars = 'ｦｱｳｴｵｶｷｹｺｻｼｽｾｿﾀﾂﾃﾅﾆﾇﾈﾊﾋﾎﾏﾐﾑﾒﾓﾔﾕﾗﾘﾜBTSEXONCTITZYTWICE{}<>;/101010'.split(''); let fontSize = 16; let drops = [];
+        let isKawaiiMode = false; let isGodMode = false; 
+        let chars = 'ｦｱｳｴｵｶｷｹｺｻｼｽｾｿﾀﾂﾃﾅﾆﾇﾈﾊﾋﾎﾏﾐﾑﾒﾓﾔﾕﾗﾘﾜBTSEXONCTITZYTWICE{}<>;/101010'.split(''); let fontSize = 16; let drops = [];
         function initMatrix() { let columns = canvas.width / fontSize; drops = []; for (let x = 0; x < columns; x++) { drops[x] = 1; } }
         initMatrix(); window.addEventListener('resize', initMatrix);
         function drawMatrix() {
-            ctx.fillStyle = isKawaiiMode ? 'rgba(26, 11, 23, 0.05)' : 'rgba(8, 0, 16, 0.05)';
+            ctx.fillStyle = isKawaiiMode ? 'rgba(26, 11, 23, 0.05)' : (isGodMode ? 'rgba(15, 10, 0, 0.05)' : 'rgba(8, 0, 16, 0.05)');
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.font = fontSize + 'px monospace';
             for (let i = 0; i < drops.length; i++) {
                 const text = chars[Math.floor(Math.random() * chars.length)];
-                if (!isKawaiiMode) { const r = Math.random(); if(r > 0.95) ctx.fillStyle = '#fff'; else if(r > 0.7) ctx.fillStyle = '#d8b4fe'; else ctx.fillStyle = '#a855f7'; } 
-                else { const r = Math.random(); if(r > 0.95) ctx.fillStyle = '#fff'; else if(r > 0.7) ctx.fillStyle = '#fbcfe8'; else ctx.fillStyle = '#ec4899'; }
+                if (isGodMode) {
+                    const r = Math.random(); if(r > 0.95) ctx.fillStyle = '#fff'; else if(r > 0.7) ctx.fillStyle = '#fef08a'; else ctx.fillStyle = '#eab308';
+                } else if (!isKawaiiMode) { 
+                    const r = Math.random(); if(r > 0.95) ctx.fillStyle = '#fff'; else if(r > 0.7) ctx.fillStyle = '#d8b4fe'; else ctx.fillStyle = '#a855f7'; 
+                } else { 
+                    const r = Math.random(); if(r > 0.95) ctx.fillStyle = '#fff'; else if(r > 0.7) ctx.fillStyle = '#fbcfe8'; else ctx.fillStyle = '#ec4899'; 
+                }
                 ctx.fillText(text, i * fontSize, drops[i] * fontSize);
                 if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0; drops[i]++;
             }
@@ -258,14 +287,14 @@
             "BIOS DATE 11/17/26 21:15:00 VER 2.04",
             "CPU: Banger-Core i9, Speed: OVER 9000 MHz",
             "Memory Test: 32768K OK",
-            "Booting Urodziny-OS v3.1...",
+            "Booting Banger-OS v3.1...",
             "Montowanie wirtualnego systemu plików ... [OK]",
-            "Ładowanie modułów... [OK]",
+            "Ładowanie modułów ... [OK]",
             "Inicjalizacja pancerza cybernetycznego ... [OK]",
             "System gotowy do działania."
         ];
         const funnyErrors = ["Nieznane polecenie. Wpisz to poprawnie, hackerze!", "To nie Windows, spróbuj innej magii.", "Błąd: Twój kot zasnął na klawiaturze?", "Błąd 404: Komenda wyparowała."];
-        const restrictedCommands = ['cd', 'sudo', 'rm', 'mkdir', 'pwd', 'cp', 'mv', 'apt', 'npm', 'git', 'tree', 'id'];
+        const restrictedCommands = ['cd', 'rm', 'mkdir', 'pwd', 'cp', 'mv', 'apt', 'npm', 'git', 'tree'];
 
         function createTermLine(text, customClass = "") { const el = document.createElement('div'); el.className = `terminal-line ${customClass}`; el.innerHTML = text; return el; }
         async function typeLine(text, delay = 50) {
@@ -277,14 +306,56 @@
         window.onload = () => setTimeout(runBootSequence, 500);
         function autoScroll() { const termBody = document.querySelector('.terminal-body'); termBody.scrollTop = termBody.scrollHeight; }
 
+        let awaitingSudoPassword = false;
+        // ==========================================
+        // TU WPISZ TAJNE HASŁO DO TRYBU "GOD MODE":
+        const SECRET_PASSWORD = "kochamcie"; 
+        // ==========================================
+
         cmdInput.addEventListener('keypress', async function(e) {
             if (e.key === 'Enter') {
                 const val = this.value.trim(); const lowerVal = val.toLowerCase(); const cmdBase = lowerVal.split(' ')[0];
-                termOutput.appendChild(createTermLine(`<span style="color:var(--purple-neon)">root@bro:~$</span> ${val}`)); this.value = '';
+                
+                // Hasło SUDO
+                if (awaitingSudoPassword) {
+                    this.value = ''; this.type = 'text'; 
+                    termOutput.appendChild(createTermLine(`<span style="color:var(--purple-neon)">[sudo] hasło dla root:</span> ${'*'.repeat(val.length)}`));
+                    
+                    if (lowerVal === SECRET_PASSWORD) {
+                        termOutput.appendChild(createTermLine("<br><span style='color: #facc15; font-size: 1.2em; font-weight:bold; text-shadow: 0 0 10px #facc15;'>[ PRZYZNANO UPRAWNIENIA ADMINISTRATORA WSZECHŚWIATA 👑 ]</span><br>"));
+                        activateGodMode();
+                    } else {
+                        termOutput.appendChild(createTermLine("sudo: 1 nieudana próba logowania. Incydent został zgłoszony.", "term-red"));
+                    }
+                    
+                    awaitingSudoPassword = false;
+                    document.getElementById('prompt-txt').innerText = isGodMode ? "bro@admin:~#" : "root@bro:~$";
+                    setTimeout(autoScroll, 50); return;
+                }
+
+                // Normalne Echo
+                const currentPrompt = isGodMode ? "bro@admin:~#" : "bro@admin:~$";
+                termOutput.appendChild(createTermLine(`<span style="color:var(--purple-neon)">${currentPrompt}</span> ${val}`)); 
+                this.value = '';
+
+                // Dynamiczne LS (pojawia się złoty easter egg)
+                let currentLs = `<span style="color: var(--term-green); font-weight: bold;">prezent.sh</span>  <span style="color: #e2e8f0;">readme.txt</span>  <span style="color: #e2e8f0;">tajne_dane.txt</span>  <span style="color: var(--term-green); font-weight: bold;">skaner.sh</span>`;
+                if (isGodMode) currentLs += `  <span style="color: #facc15; font-weight: bold; text-shadow: 0 0 8px #facc15;">isekai.sh</span>`;
+                let currentLsHidden = `<span style="color: #3b82f6; font-weight: bold;">.</span>  <span style="color: #3b82f6; font-weight: bold;">..</span>  <span style="color: #e2e8f0;">.flower</span>  ` + currentLs;
+
+                // Sprawdzanie komend
                 if (val === '') {}
                 else if (restrictedCommands.includes(cmdBase)) { termOutput.appendChild(createTermLine(`<span style="color: var(--term-red)">bash: ${cmdBase}: Odmowa dostępu. Brak wystarczających uprawnień. Zgłoszono incydent do administratora!</span>`)); }
-                else if (lowerVal === 'ls') { termOutput.appendChild(createTermLine("prezent.sh  readme.txt  tajne_dane.txt  skaner.sh", "term-sys")); } 
-                else if (lowerVal === 'ls -a' || lowerVal === 'ls -al' || lowerVal === 'ls -la') { termOutput.appendChild(createTermLine(".  ..  .flower  prezent.sh  readme.txt  tajne_dane.txt  skaner.sh", "term-sys")); }
+                else if (lowerVal === 'sudo' || lowerVal === 'sudo su') {
+                    if (isGodMode) termOutput.appendChild(createTermLine("Jesteś już Bogiem tego systemu.", "term-sys"));
+                    else { awaitingSudoPassword = true; document.getElementById('prompt-txt').innerText = "[sudo] hasło:"; this.type = 'password'; }
+                }
+                else if (lowerVal === 'exit') {
+                    if (isGodMode) { deactivateGodMode(); termOutput.appendChild(createTermLine("Wylogowano z konta Administratora. Zabrano uprawnienia boskie.", "term-sys")); }
+                    else { inputWrapper.style.display = 'none'; await triggerFakeWipe(); }
+                }
+                else if (lowerVal === 'ls') { termOutput.appendChild(createTermLine(currentLs, "term-sys")); } 
+                else if (lowerVal === 'ls -a' || lowerVal === 'ls -al' || lowerVal === 'ls -la') { termOutput.appendChild(createTermLine(currentLsHidden, "term-sys")); }
                 else if (lowerVal === 'cat readme.txt') { termOutput.appendChild(createTermLine("Wpisz 'get' aby wygenerować kartę statystyk z tego roku. W systemie ukryty jest też prezent (prezent.sh).", "term-sys")); }
                 else if (lowerVal === 'cat tajne_dane.txt') {
                     const extraWishes = `<div style="text-align: center; margin: 20px 0; width: 100%; position: relative; z-index: 20;">
@@ -303,6 +374,21 @@
                     termOutput.appendChild(createTermLine("Skanowanie playlisty [██████████] 100% - Wynik: Ultimate Fan 🎶", "term-sys")); autoScroll(); await new Promise(r => setTimeout(r, 800));
                     await typeLine("Wniosek końcowy: JESTEŚ SIGIEMKĄ 😎✨", 40);
                     inputWrapper.style.display = 'flex'; cmdInput.focus();
+                }
+                // ======== NOWY EASTER EGG (ISEKAI) ========
+                else if (lowerVal === './isekai.sh' || lowerVal === 'bash isekai.sh') {
+                    if (isGodMode) {
+                        inputWrapper.style.display = 'none';
+                        await typeLine("Otwieranie bram międzywymiarowych...", 30); await new Promise(r => setTimeout(r, 600));
+                        termOutput.appendChild(createTermLine("Cel: Świat z darmowym mieszkaniem, Anime i żarciem... [ZNALEZIONO]", "term-green")); autoScroll(); await new Promise(r => setTimeout(r, 1000));
+                        termOutput.appendChild(createTermLine("Wzywanie Truck-kuna do przeprowadzenia reinkarnacji... [GOTOWE]", "term-green")); autoScroll(); await new Promise(r => setTimeout(r, 1200));
+                        termOutput.appendChild(createTermLine("Inicjalizacja isekai za 3... 2... 1...", "term-sys")); autoScroll(); await new Promise(r => setTimeout(r, 1500));
+                        termOutput.appendChild(createTermLine("<br><span style='color: var(--term-red); font-size: 1.2em; font-weight:bold; text-shadow: 0 0 10px var(--term-red);'>[ ❌ BŁĄD KRYTYCZNY: TRANSMISJA PRZERWANA ]</span>", "term-red")); autoScroll(); await new Promise(r => setTimeout(r, 1000));
+                        termOutput.appendChild(createTermLine("<br><span style='color: #facc15; font-size: 1.1em; font-weight:bold;'>Powód: Za bardzo bym tęskniła! Nigdzie się nie wybierasz, zostajesz tu ze mną! 💖🐈</span><br>")); autoScroll();
+                        inputWrapper.style.display = 'flex'; cmdInput.focus();
+                    } else {
+                        termOutput.appendChild(createTermLine("bash: ./isekai.sh: Brak pliku lub katalogu", "term-red"));
+                    }
                 }
                 else if (lowerVal === 'get') {
                     termOutput.appendChild(createTermLine("Generowanie Systemowego Raportu 2026... ⏳", "term-sys"));
@@ -355,7 +441,7 @@
                         const stats = [
                             { icon: '🐛', text: 'Bugi naprawione', val: 'OVER 9000' },
                             { icon: '🌸', text: 'Obejrzane Anime', val: 'NIEZLICZONE' },
-                            { icon: '🎧', text: 'Music Playtime', val: '999k MIN' },
+                            { icon: '🎧', text: 'Playtime', val: '999k MIN' },
                             { icon: '🚀', text: 'Zajebistość', val: 'INFINITY' }
                         ];
             
@@ -407,10 +493,32 @@
             termScreen.style.display = 'flex'; setTimeout(() => { termScreen.style.opacity = '1'; }, 50); termOutput.innerHTML = '';
             const restoreLines = ["INITIATING SYSTEM RESTORE...", "RECOVERING DATABASE... [OK]", "RESTORING ANIME WATCH HISTORY... [OK]", "SYSTEM RESTORE COMPLETE.", "Witaj ponownie, Hackerze."];
             for (let line of restoreLines) { termOutput.appendChild(createTermLine(line, "term-sys")); autoScroll(); await new Promise(r => setTimeout(r, 200 + Math.random() * 150)); }
-            inputWrapper.style.display = 'flex'; document.getElementById('cmd-input').focus();
+            inputWrapper.style.display = 'flex'; cmdInput.focus();
         }
 
-        // Easter Eggs
+        // Easter Eggs & Funkcje Wylogowania
+        function activateGodMode() {
+            if (isGodMode) return;
+            isGodMode = true;
+            document.body.classList.add('god-mode');
+            document.getElementById('window-title').innerText = "wszechswiat-os — bash — GOD MODE";
+            document.getElementById('prompt-txt').innerText = "bro@admin:~#";
+            document.getElementById('mini-prompt').innerText = "bro@admin:~#";
+            chars = '0110011101101111011001000101111101101101011011110110010001100101★✧👑⚡'.split(''); 
+            fontSize = 20; 
+        }
+
+        function deactivateGodMode() {
+            if (!isGodMode) return;
+            isGodMode = false;
+            document.body.classList.remove('god-mode');
+            document.getElementById('window-title').innerText = "banger-os — bash — 80x24";
+            document.getElementById('prompt-txt').innerText = "root@bro:~$";
+            document.getElementById('mini-prompt').innerText = "root@bro:~$";
+            chars = 'ｦｱｳｴｵｶｷｹｺｻｼｽｾｿﾀﾂﾃﾅﾆﾇﾈﾊﾋﾎﾏﾐﾑﾒﾓﾔﾕﾗﾘﾜBTSEXONCTITZYTWICE{}<>;/101010'.split(''); 
+            fontSize = 16; 
+        }
+
         const modal = document.getElementById('custom-modal'); const modalText = document.getElementById('modal-content-text');
         function showModal(text, color = "var(--term-red)") { modalText.innerText = text; modalText.style.color = color; modal.classList.add('active'); }
         function closeModal() { modal.classList.remove('active'); }
@@ -419,7 +527,7 @@
         const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']; let konamiIndex = 0;
         window.addEventListener('keydown', (e) => { if (e.key === konamiCode[konamiIndex]) { konamiIndex++; if (konamiIndex === konamiCode.length) { activateKawaiiMode(); konamiIndex = 0; } } else { konamiIndex = 0; } });
         function activateKawaiiMode() {
-            if (isKawaiiMode) return; isKawaiiMode = true; chars = '🌸✨💖🎤🎶🎀(✿◠‿◠)UwU'.split(''); fontSize = 22; 
+            if (isKawaiiMode || isGodMode) return; isKawaiiMode = true; chars = '🌸✨💖🎤🎶🎀(✿◠‿◠)UwU'.split(''); fontSize = 22; 
             document.documentElement.style.setProperty('--purple-light', '#fbcfe8'); document.documentElement.style.setProperty('--purple-main', '#ec4899'); document.documentElement.style.setProperty('--purple-neon', '#db2777'); document.documentElement.style.setProperty('--bg-color', '#1a0b17');
             showModal("SUPER KAWAII SAKURA MODE:\nODBLOKOWANY!", "#ec4899");
         }
@@ -460,7 +568,7 @@
             cat.classList.add('active');
             msg.classList.add('show');
             
-            const sounds = ["Miau 💖", "Purr... 💻", "*mruczy*", "Kocham Cię! 😻", "System hacked! 🐾"];
+            const sounds = ["Miau! 💖", "Purr... 💻", "*mruczy*", "Kocham Cię! 😻", "System hacked! 🐾"];
             const faces = ["(=^>ω<^=)", "(=^OωO^=)", "(=✧ω✧=)", "(=^-ω-^=)"];
             
             msg.innerText = sounds[Math.floor(Math.random() * sounds.length)];

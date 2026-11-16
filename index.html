@@ -55,7 +55,6 @@
         #mini-cmd-input::placeholder { color: rgba(16, 185, 129, 0.4); }
 
         #custom-modal, #game-modal, #cake-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 1rem; }
-        #custom-modal { z-index: 10000; } /* Gwarantuje, że ten modal będzie ponad tortem */
         #custom-modal.active, #game-modal.active, #cake-modal.active { opacity: 1; pointer-events: auto; }
         .modal-box { background: rgba(20, 5, 30, 0.95); border: 2px solid var(--purple-neon); box-shadow: 0 0 30px var(--purple-neon); padding: 2.5rem 2rem; border-radius: 16px; max-width: 550px; width: 100%; text-align: center; transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
         #custom-modal.active .modal-box, #game-modal.active .modal-box, #cake-modal.active .modal-box { transform: scale(1); }
@@ -81,7 +80,7 @@
         .candle { position: absolute; bottom: 135px; width: 12px; height: 35px; background: #fff; border-radius: 6px; box-shadow: inset -3px 0 rgba(0,0,0,0.1); cursor: pointer; z-index: 10; }
         .candle-1 { left: 50px; } .candle-2 { left: 94px; } .candle-3 { left: 138px; }
         .flame { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 14px; height: 22px; background: #fbbf24; border-radius: 50% 50% 20% 20%; box-shadow: 0 0 15px #fbbf24, 0 0 25px #f59e0b; animation: flicker 0.1s infinite alternate; transition: all 0.3s; z-index: 11; }
-        .flame.blown-out { opacity: 0; transform: translateX(-50%) scale(0); }
+        .flame.blown-out { opacity: 0 !important; transform: translateX(-50%) scale(0) !important; animation: none !important; }
         @keyframes flicker { 0% { transform: translateX(-50%) scale(1); opacity: 1; } 100% { transform: translateX(-50%) scale(1.1); opacity: 0.9; } }
         
         .balloon { position: absolute; width: 30px; height: 40px; border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; opacity: 0.7; animation: floatUp 6s infinite ease-in-out; pointer-events: none; }

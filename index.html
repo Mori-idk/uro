@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wszystkiego Najlepszego!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Poppins:wght@300;400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Poppins:wght@300;400;600;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
             --purple-light: #d8b4fe;
@@ -211,41 +211,127 @@
                     inputWrapper.style.display = 'flex'; cmdInput.focus();
                 }
                 else if (lowerVal === 'get') {
-                    termOutput.appendChild(createTermLine("Generowanie Urodzinowego Podsumowania Roku 2026 (Wrapped Edition)... ⏳", "term-sys"));
+                    termOutput.appendChild(createTermLine("Generowanie Nowoczesnego Podsumowania Roku (Wrapped Edition)... ⏳", "term-sys"));
                     autoScroll();
             
                     const cvs = document.createElement('canvas'); cvs.width = 1080; cvs.height = 1920; const ctx = cvs.getContext('2d');
             
-                    const grad = ctx.createLinearGradient(0, 0, 0, 1920);
-                    grad.addColorStop(0, '#080010'); grad.addColorStop(0.5, '#6b21a8'); grad.addColorStop(1, '#c026d3');
-                    ctx.fillStyle = grad; ctx.fillRect(0, 0, 1080, 1920);
-            
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-                    for(let i=0; i<150; i++) {
-                        ctx.font = Math.random() * 40 + 10 + 'px monospace';
-                        ctx.fillText(chars[Math.floor(Math.random() * chars.length)], Math.random() * 1080, Math.random() * 1920);
+                    // --- 1. Nowoczesne Tło (Aurora Gradient) ---
+                    ctx.fillStyle = '#0a0014';
+                    ctx.fillRect(0, 0, 1080, 1920);
+
+                    const addGlow = (x, y, r, color) => {
+                        const radGrad = ctx.createRadialGradient(x, y, 0, x, y, r);
+                        radGrad.addColorStop(0, color);
+                        radGrad.addColorStop(1, 'rgba(0,0,0,0)');
+                        ctx.fillStyle = radGrad;
+                        ctx.fillRect(0, 0, 1080, 1920);
+                    };
+                    addGlow(150, 300, 800, 'rgba(192, 38, 211, 0.45)'); // Różowy neon
+                    addGlow(900, 1500, 900, 'rgba(16, 185, 129, 0.35)'); // Zielony neon
+                    addGlow(800, -50, 700, 'rgba(107, 33, 168, 0.5)'); // Fiolet
+
+                    // Kropki w tle (subtelny wzór grid)
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+                    for(let x = 0; x < 1080; x += 45) {
+                        for(let y = 0; y < 1920; y += 45) {
+                            ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill();
+                        }
                     }
+
+                    // --- 2. Nowoczesny Nagłówek ---
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    
+                    // Pigułka "WRAPPED 2026"
+                    ctx.fillStyle = '#c026d3';
+                    ctx.beginPath();
+                    if(ctx.roundRect) ctx.roundRect(390, 100, 300, 70, 35);
+                    else ctx.fillRect(390, 100, 300, 70); // Fallback
+                    ctx.fill();
+                    
+                    ctx.fillStyle = '#ffffff'; 
+                    ctx.font = 'bold 32px Poppins, sans-serif'; 
+                    ctx.fillText('WRAPPED 2026', 540, 137);
+
+                    ctx.font = '900 85px Poppins, sans-serif'; 
+                    ctx.fillText('TEN ROK', 540, 260);
+                    ctx.fillStyle = '#d8b4fe'; 
+                    ctx.font = 'bold 50px Poppins, sans-serif'; 
+                    ctx.fillText('NALEŻAŁ DO CIEBIE!', 540, 340);
             
-                    ctx.textAlign = 'center'; ctx.fillStyle = '#ffffff';
-                    ctx.font = 'bold 70px Poppins, sans-serif'; ctx.fillText('URODZINOWE PODSUMOWANIE 2026', 540, 150);
-                    ctx.fillStyle = '#d8b4fe'; ctx.font = '45px Poppins, sans-serif'; ctx.fillText('Ten rok należał do Ciebie!', 540, 230);
-            
+                    // --- 3. Ładowanie i Idealne Kadrowanie Zdjęcia ---
                     const img = new Image(); 
-                    // Usunięto img.crossOrigin = "Anonymous"; aby pliki same-origin i lokalne działały poprawnie
                     img.src = 'ok.jpg';
                     img.onload = () => {
-                        ctx.save(); ctx.beginPath(); ctx.arc(540, 600, 280, 0, Math.PI * 2, true); ctx.closePath(); ctx.clip();
-                        ctx.drawImage(img, 260, 320, 560, 560); ctx.restore();
-                        ctx.beginPath(); ctx.arc(540, 600, 280, 0, Math.PI * 2, true); ctx.lineWidth = 15; ctx.strokeStyle = '#10b981'; ctx.stroke();
+                        const cx = 540; const cy = 720; const radius = 280;
+
+                        // Rysowanie świetlistej ramki zdjęcia
+                        ctx.save(); 
+                        ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2, true); ctx.closePath();
+                        ctx.lineWidth = 18; 
+                        ctx.strokeStyle = '#c026d3'; 
+                        ctx.shadowColor = '#c026d3'; 
+                        ctx.shadowBlur = 40; 
+                        ctx.stroke(); 
+                        
+                        // Clipping mask do zdjęcia
+                        ctx.clip(); 
+                        ctx.shadowBlur = 0; // Reset cienia do samego obrazka
+
+                        // Obliczanie proporcji (object-fit: cover)
+                        const imgRatio = img.width / img.height;
+                        let drawWidth = radius * 2;
+                        let drawHeight = radius * 2;
+                        let drawX = cx - radius;
+                        let drawY = cy - radius;
+
+                        if (imgRatio > 1) { 
+                            drawWidth = drawHeight * imgRatio;
+                            drawX = cx - (drawWidth / 2);
+                        } else { 
+                            drawHeight = drawWidth / imgRatio;
+                            drawY = cy - (drawHeight / 2);
+                        }
+
+                        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight); 
+                        ctx.restore();
             
-                        ctx.textAlign = 'left'; ctx.fillStyle = '#ffffff'; ctx.font = 'bold 55px Poppins, sans-serif'; ctx.fillText('Twoje Statystyki:', 120, 1050);
-                        ctx.font = '45px Poppins, sans-serif'; ctx.fillStyle = '#10b981'; ctx.fillText('✔ Wyłapane Bugi: OVER 9000 🐛', 120, 1170);
-                        ctx.fillStyle = '#f472b6'; ctx.fillText('✔ Obejrzane odcinki Anime: Niezliczone 🌸', 120, 1270);
-                        ctx.fillStyle = '#d8b4fe'; ctx.fillText('✔ Czas z muzyką: 999,999 minut 🎧', 120, 1370);
-                        ctx.fillStyle = '#c026d3'; ctx.fillText('✔ Poziom Zajebistości: infinity normy 🚀', 120, 1470);
+                        // --- 4. Nowoczesne Karty Statystyk ---
+                        ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+                        ctx.fillStyle = '#ffffff'; 
+                        ctx.font = 'bold 55px Poppins, sans-serif'; 
+                        ctx.fillText('Twoje Statystyki:', 120, 1100);
+
+                        const stats = [
+                            { icon: '🐛', text: 'Wyłapane Bugi: OVER 9000', color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)' },
+                            { icon: '🌸', text: 'Odcinki Anime: Niezliczone', color: '#f472b6', bg: 'rgba(244, 114, 182, 0.15)' },
+                            { icon: '🎧', text: 'Czas z muzyką: 999,999 min', color: '#d8b4fe', bg: 'rgba(216, 180, 254, 0.15)' },
+                            { icon: '🚀', text: 'Zajebistość: Infinity', color: '#c026d3', bg: 'rgba(192, 38, 211, 0.15)' }
+                        ];
+
+                        let startY = 1200;
+                        stats.forEach((stat) => {
+                            // Tło karty
+                            ctx.fillStyle = stat.bg;
+                            ctx.beginPath();
+                            if(ctx.roundRect) ctx.roundRect(120, startY, 840, 100, 25);
+                            else ctx.fillRect(120, startY, 840, 100);
+                            ctx.fill();
+                            
+                            // Tekst
+                            ctx.fillStyle = stat.color;
+                            ctx.font = '600 42px Poppins, sans-serif';
+                            ctx.fillText(`${stat.icon} ${stat.text}`, 160, startY + 28);
+                            startY += 135;
+                        });
             
-                        ctx.textAlign = 'center'; ctx.fillStyle = '#ffffff'; ctx.font = 'bold 45px Poppins, sans-serif'; ctx.fillText('Jesteś w 1% najlepszych sióstr na świecie! ❤️', 540, 1750);
+                        // --- 5. Dolny pasek (Zakończenie) ---
+                        ctx.textAlign = 'center'; 
+                        ctx.fillStyle = '#ffffff'; 
+                        ctx.font = 'bold 42px Poppins, sans-serif'; 
+                        ctx.fillText('Jesteś w 1% najlepszych sióstr na świecie! ❤️', 540, 1810);
             
+                        // Pobieranie
                         try {
                             const link = document.createElement('a'); link.download = 'Urodzinowe_Wrapped_2026.png'; link.href = cvs.toDataURL('image/png'); link.click();
                             termOutput.appendChild(createTermLine("Sukces! Pomyślnie pobrano plik Urodzinowe_Wrapped_2026.png 🎁 Sprawdź pobrane pliki!", "term-green")); 

@@ -18,9 +18,67 @@
 
         body { margin: 0; overflow: hidden; background-color: var(--bg-color); font-family: 'Poppins', sans-serif; color: white; user-select: none; transition: background-color 1s ease; height: 100vh; width: 100vw; }
 
-        #matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0; transition: opacity 2s ease-in; }
+        #matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 1; transition: opacity 2s ease-in; }
 
-        #terminal-screen { position: absolute; inset: 0; background-color: #05000a; z-index: 100; display: flex; flex-direction: column; padding: clamp(1rem, 5vw, 3rem); font-family: 'Fira Code', monospace; transition: opacity 1s ease-in-out; overflow-y: auto; scroll-behavior: smooth; }
+        /* ================= TERMINAL V2.0 ================= */
+        #terminal-screen { 
+            position: absolute; inset: 0; z-index: 100; 
+            display: flex; justify-content: center; align-items: center; 
+            padding: clamp(10px, 4vw, 3rem); 
+            transition: opacity 1s ease-in-out; 
+            background: rgba(0, 0, 0, 0.4); /* Przyciemnienie Matrixa z tyłu */
+        }
+
+        .terminal-window {
+            width: 100%; height: 100%; max-width: 1200px;
+            background: rgba(5, 0, 12, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(168, 85, 247, 0.2);
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .terminal-header {
+            background: rgba(20, 5, 30, 0.95);
+            padding: 12px 20px;
+            display: flex; align-items: center;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+            z-index: 10;
+        }
+        
+        .terminal-buttons { display: flex; gap: 8px; width: 60px; }
+        .terminal-buttons span { width: 13px; height: 13px; border-radius: 50%; }
+        .terminal-buttons span:nth-child(1) { background: #ff5f56; box-shadow: 0 0 5px #ff5f56; }
+        .terminal-buttons span:nth-child(2) { background: #ffbd2e; box-shadow: 0 0 5px #ffbd2e; }
+        .terminal-buttons span:nth-child(3) { background: #27c93f; box-shadow: 0 0 5px #27c93f; }
+        
+        .terminal-title { 
+            flex-grow: 1; text-align: center; 
+            color: #d8b4fe; font-family: 'Fira Code', monospace; 
+            font-size: 0.85rem; letter-spacing: 1px; font-weight: 600;
+            margin-right: 60px; /* Balans dla przycisków */
+        }
+
+        .terminal-body {
+            flex-grow: 1; padding: clamp(1rem, 4vw, 2rem);
+            overflow-y: auto; scroll-behavior: smooth;
+            font-family: 'Fira Code', monospace;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Scanlines CRT Effect */
+        .scanlines {
+            position: absolute; inset: 0; pointer-events: none; z-index: 8;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            opacity: 0.7;
+        }
+        /* ================================================= */
 
         .terminal-line { color: var(--term-green); font-size: clamp(0.9rem, 2.5vw, 1.1rem); margin-bottom: 0.5rem; text-shadow: 0 0 5px var(--term-green); word-break: break-word; line-height: 1.4; }
         .term-red { color: var(--term-red); text-shadow: 0 0 8px var(--term-red); font-weight: bold; }
@@ -35,7 +93,7 @@
         #cmd-input { background: transparent; border: none; color: white; font-family: 'Fira Code', monospace; font-size: clamp(0.9rem, 2.5vw, 1.1rem); outline: none; flex-grow: 1; text-shadow: 0 0 5px white; width: 100%; }
 
         #card-screen { position: absolute; inset: 0; z-index: 50; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 1.5s ease-in-out; padding: 1rem; }
-        .glass-card { background: rgba(25, 10, 35, 0.5); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 40px rgba(168, 85, 247, 0.3), inset 0 0 20px rgba(168, 85, 247, 0.1); border-radius: 24px; padding: clamp(2rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3rem); width: 100%; max-width: 850px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2rem; transform: translateY(20px); transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .glass-card { position: relative; background: rgba(25, 10, 35, 0.5); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 40px rgba(168, 85, 247, 0.3), inset 0 0 20px rgba(168, 85, 247, 0.1); border-radius: 24px; padding: clamp(2rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3rem); width: 100%; max-width: 850px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2rem; transform: translateY(20px); transition: transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         #card-screen.visible .glass-card { transform: translateY(0); }
 
         .glitch-title { font-family: 'Press Start 2P', cursive; font-size: clamp(1.2rem, 4vw, 2.2rem); color: #fff; text-shadow: 0 0 10px var(--purple-neon), 0 0 20px var(--purple-neon); line-height: 1.6; position: relative; display: inline-block; }
@@ -54,7 +112,17 @@
         #mini-cmd-input { background: transparent; border: none; color: var(--term-green); font-family: 'Fira Code', monospace; font-size: clamp(0.8rem, 2vw, 1rem); outline: none; flex-grow: 1; width: 100%; }
         #mini-cmd-input::placeholder { color: rgba(16, 185, 129, 0.4); }
 
+        /* Wirtualny Kotek - Hakerski Pixel-Style */
+        #virtual-cat { position: absolute; bottom: clamp(15px, 4vw, 30px); right: clamp(15px, 4vw, 30px); font-size: clamp(1.2rem, 3vw, 1.8rem); cursor: pointer; z-index: 60; color: #f472b6; font-family: 'Fira Code', monospace; font-weight: bold; text-shadow: 0 0 10px var(--purple-neon); user-select: none; }
+        #cat-face { transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: inline-block; }
+        #virtual-cat:hover #cat-face, #virtual-cat.active #cat-face { transform: scale(1.15) rotate(-10deg); color: #fff; }
+        .cat-message { position: absolute; bottom: 100%; right: 50%; transform: translate(50%, 10px); background: rgba(20, 5, 30, 0.95); color: #f472b6; padding: 8px 15px; border-radius: 12px; border: 2px solid var(--purple-neon); font-size: clamp(0.75rem, 2vw, 0.9rem); font-family: 'Poppins', sans-serif; font-weight: bold; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s; box-shadow: 0 0 15px var(--purple-neon); }
+        .cat-message::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border-width: 8px; border-style: solid; border-color: var(--purple-neon) transparent transparent transparent; }
+        .cat-message.show { opacity: 1; transform: translate(50%, -15px); animation: floatNya 1.5s infinite ease-in-out alternate; }
+        @keyframes floatNya { 0% { transform: translate(50%, -15px); } 100% { transform: translate(50%, -22px); } }
+
         #custom-modal, #game-modal, #cake-modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 1rem; }
+        #custom-modal { z-index: 10000; } 
         #custom-modal.active, #game-modal.active, #cake-modal.active { opacity: 1; pointer-events: auto; }
         .modal-box { background: rgba(20, 5, 30, 0.95); border: 2px solid var(--purple-neon); box-shadow: 0 0 30px var(--purple-neon); padding: 2.5rem 2rem; border-radius: 16px; max-width: 550px; width: 100%; text-align: center; transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
         #custom-modal.active .modal-box, #game-modal.active .modal-box, #cake-modal.active .modal-box { transform: scale(1); }
@@ -98,11 +166,22 @@
 <body>
     <canvas id="matrix-canvas"></canvas>
     
-    <div id="terminal-screen" onclick="document.getElementById('cmd-input').focus()">
-        <div id="term-output"></div>
-        <div class="input-wrapper" id="input-wrapper">
-            <span class="prompt">root@bro:~$</span>
-            <input type="text" id="cmd-input" autocomplete="off" spellcheck="false" autofocus>
+    <div id="terminal-screen">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-buttons">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="terminal-title">banger-os — bash — 80x24</div>
+            </div>
+            <div class="terminal-body" onclick="if(document.getElementById('input-wrapper').style.display !== 'none') document.getElementById('cmd-input').focus()">
+                <div class="scanlines"></div>
+                <div id="term-output"></div>
+                <div class="input-wrapper" id="input-wrapper">
+                    <span class="prompt">root@bro:~$</span>
+                    <input type="text" id="cmd-input" autocomplete="off" spellcheck="false" autofocus>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -120,6 +199,12 @@
             <div class="mini-terminal">
                 <span class="prompt">root@bro:~$</span>
                 <input type="text" id="mini-cmd-input" autocomplete="off" spellcheck="false" placeholder="Wpisz 'exit' aby wrócić...">
+            </div>
+
+            <!-- Interaktywny Kotek CSS -->
+            <div id="virtual-cat" onclick="pokeCat()" title="Pogłaszcz mnie!">
+                <div id="cat-face">(=^･ω･^=)</div>
+                <div class="cat-message" id="cat-msg">Miau! 💖</div>
             </div>
         </div>
     </div>
@@ -169,9 +254,18 @@
 
         // Terminal Logic
         const termOutput = document.getElementById('term-output'); const inputWrapper = document.getElementById('input-wrapper'); const cmdInput = document.getElementById('cmd-input');
-        const bootSequence = ["Booting Urodziny-OS v3.1...", "Inicjalizacja modułów ... [OK]", "Ładowanie sekwencji ... [OK]", "System gotowy do działania."];
+        const bootSequence = [
+            "BIOS DATE 11/17/26 21:15:00 VER 2.04",
+            "CPU: Banger-Core i9, Speed: OVER 9000 MHz",
+            "Memory Test: 32768K OK",
+            "Booting Urodziny-OS v3.1...",
+            "Montowanie wirtualnego systemu plików ... [OK]",
+            "Ładowanie modułów... [OK]",
+            "Inicjalizacja pancerza cybernetycznego ... [OK]",
+            "System gotowy do działania."
+        ];
         const funnyErrors = ["Nieznane polecenie. Wpisz to poprawnie, hackerze!", "To nie Windows, spróbuj innej magii.", "Błąd: Twój kot zasnął na klawiaturze?", "Błąd 404: Komenda wyparowała."];
-        const restrictedCommands = ['cd', 'sudo', 'rm', 'mkdir', 'pwd', 'cp', 'mv', 'apt', 'npm', 'git'];
+        const restrictedCommands = ['cd', 'sudo', 'rm', 'mkdir', 'pwd', 'cp', 'mv', 'apt', 'npm', 'git', 'tree', 'id'];
 
         function createTermLine(text, customClass = "") { const el = document.createElement('div'); el.className = `terminal-line ${customClass}`; el.innerHTML = text; return el; }
         async function typeLine(text, delay = 50) {
@@ -179,9 +273,9 @@
             for(let i=0; i<text.length; i++) { line.textContent += text[i]; await new Promise(r => setTimeout(r, delay + (Math.random() * 30))); }
             line.classList.remove('typing-cursor'); autoScroll();
         }
-        async function runBootSequence() { for(let i=0; i<bootSequence.length; i++) { await typeLine(bootSequence[i], 30); await new Promise(r => setTimeout(r, 400)); } inputWrapper.style.display = 'flex'; cmdInput.focus(); }
+        async function runBootSequence() { for(let i=0; i<bootSequence.length; i++) { await typeLine(bootSequence[i], 25); await new Promise(r => setTimeout(r, 250)); } inputWrapper.style.display = 'flex'; cmdInput.focus(); }
         window.onload = () => setTimeout(runBootSequence, 500);
-        function autoScroll() { const termScreen = document.getElementById('terminal-screen'); termScreen.scrollTop = termScreen.scrollHeight; }
+        function autoScroll() { const termBody = document.querySelector('.terminal-body'); termBody.scrollTop = termBody.scrollHeight; }
 
         cmdInput.addEventListener('keypress', async function(e) {
             if (e.key === 'Enter') {
@@ -193,9 +287,9 @@
                 else if (lowerVal === 'ls -a' || lowerVal === 'ls -al' || lowerVal === 'ls -la') { termOutput.appendChild(createTermLine(".  ..  .flower  prezent.sh  readme.txt  tajne_dane.txt  skaner.sh", "term-sys")); }
                 else if (lowerVal === 'cat readme.txt') { termOutput.appendChild(createTermLine("Wpisz 'get' aby wygenerować kartę statystyk z tego roku. W systemie ukryty jest też prezent (prezent.sh).", "term-sys")); }
                 else if (lowerVal === 'cat tajne_dane.txt') {
-                    const extraWishes = `<div style="text-align: center; margin: 20px 0; width: 100%;">
+                    const extraWishes = `<div style="text-align: center; margin: 20px 0; width: 100%; position: relative; z-index: 20;">
                         <div style="color: var(--term-green); margin-bottom: 15px; font-size: 1.1rem;">Dużo zdrówka, mało stresu, darmowej pizzy i żeby życie było zajebiste.</div>
-                        <img src="ok.jpg" alt="bro" style="max-width: 90%; max-height: 400px; border-radius: 15px; border: 3px solid var(--purple-neon); box-shadow: 0 0 30px rgba(192, 38, 211, 0.6); display: inline-block; object-fit: cover;" onload="document.getElementById('terminal-screen').scrollTop = document.getElementById('terminal-screen').scrollHeight;">
+                        <img src="ok.jpg" alt="bro" style="max-width: 90%; max-height: 400px; border-radius: 15px; border: 3px solid var(--purple-neon); box-shadow: 0 0 30px rgba(192, 38, 211, 0.6); display: inline-block; object-fit: cover;" onload="const tb = document.querySelector('.terminal-body'); tb.scrollTop = tb.scrollHeight;">
                         <div style="color: var(--term-pink); font-family: 'Poppins', sans-serif; font-weight: bold; margin-top: 15px; font-size: 1.1rem; text-shadow: 0 0 8px var(--term-pink);">Tak, to Ty 🐈. Hakerkman level hard! 😎✨</div>
                     </div>`;
                     termOutput.appendChild(createTermLine(extraWishes));
@@ -216,109 +310,64 @@
             
                     const cvs = document.createElement('canvas'); cvs.width = 1080; cvs.height = 1920; const ctx = cvs.getContext('2d');
             
-                    // Tło minimalistyczne, bardzo ciemne
                     const grad = ctx.createLinearGradient(0, 0, 0, 1920);
-                    grad.addColorStop(0, '#06020a');
-                    grad.addColorStop(1, '#11051c');
-                    ctx.fillStyle = grad; 
-                    ctx.fillRect(0, 0, 1080, 1920);
+                    grad.addColorStop(0, '#06020a'); grad.addColorStop(1, '#11051c');
+                    ctx.fillStyle = grad; ctx.fillRect(0, 0, 1080, 1920);
             
-                    // Subtelna, technologiczna siatka w tle (grid)
                     ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
                     ctx.lineWidth = 1;
                     for(let i = 0; i < 1080; i += 60) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 1920); ctx.stroke(); }
                     for(let i = 0; i < 1920; i += 60) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(1080, i); ctx.stroke(); }
             
-                    // Minimalistyczny, nowoczesny nagłówek
                     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                    ctx.fillStyle = '#ffffff';
-                    ctx.font = '900 95px Poppins, sans-serif'; 
-                    ctx.fillText('LEVEL UP!', 540, 180);
+                    ctx.fillStyle = '#ffffff'; ctx.font = '900 95px Poppins, sans-serif'; ctx.fillText('LEVEL UP!', 540, 180);
                     
-                    ctx.fillStyle = '#10b981'; // hakerski zielony
-                    ctx.font = '600 35px Fira Code, monospace'; 
-                    ctx.fillText('> SYSTEM_UPDATE_COMPLETE', 540, 280);
+                    ctx.fillStyle = '#10b981'; ctx.font = '600 35px Fira Code, monospace'; ctx.fillText('> SYSTEM_UPDATE_COMPLETE', 540, 280);
             
                     const img = new Image(); 
                     img.src = 'ok.jpg';
                     img.onload = () => {
                         const cx = 540; const cy = 700; const radius = 300;
-            
-                        // Geometryczny tech-ring wokół zdjęcia
                         ctx.save();
                         ctx.beginPath(); ctx.arc(cx, cy, radius + 25, 0, Math.PI * 2);
-                        ctx.strokeStyle = '#a855f7';
-                        ctx.lineWidth = 3;
-                        ctx.setLineDash([15, 20]);
-                        ctx.stroke();
+                        ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 3; ctx.setLineDash([15, 20]); ctx.stroke();
                         ctx.restore();
             
-                        // Ramka dla zdjęcia
                         ctx.save(); 
                         ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2, true); ctx.closePath();
-                        ctx.lineWidth = 6; 
-                        ctx.strokeStyle = '#ffffff'; 
-                        ctx.stroke(); 
-                        
-                        ctx.clip(); 
+                        ctx.lineWidth = 6; ctx.strokeStyle = '#ffffff'; ctx.stroke(); ctx.clip(); 
             
-                        // Rysowanie z object-fit cover
                         const imgRatio = img.width / img.height;
-                        let drawWidth = radius * 2;
-                        let drawHeight = radius * 2;
-                        let drawX = cx - radius;
-                        let drawY = cy - radius;
+                        let drawWidth = radius * 2; let drawHeight = radius * 2;
+                        let drawX = cx - radius; let drawY = cy - radius;
             
                         if (imgRatio > 1) { 
-                            drawWidth = drawHeight * imgRatio;
-                            drawX = cx - (drawWidth / 2);
+                            drawWidth = drawHeight * imgRatio; drawX = cx - (drawWidth / 2);
                         } else { 
-                            drawHeight = drawWidth / imgRatio;
-                            drawY = cy - (drawHeight / 2);
+                            drawHeight = drawWidth / imgRatio; drawY = cy - (drawHeight / 2);
                         }
             
-                        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight); 
-                        ctx.restore();
+                        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight); ctx.restore();
             
-                        // Sekcja minimalistycznych statystyk (clean lines)
                         ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-                        ctx.fillStyle = '#d8b4fe'; 
-                        ctx.font = '700 45px Poppins, sans-serif'; 
-                        ctx.fillText('USER_STATS:', 150, 1140);
+                        ctx.fillStyle = '#d8b4fe'; ctx.font = '700 45px Poppins, sans-serif'; ctx.fillText('USER_STATS:', 150, 1140);
             
                         const stats = [
                             { icon: '🐛', text: 'Bugi naprawione', val: 'OVER 9000' },
                             { icon: '🌸', text: 'Obejrzane Anime', val: 'NIEZLICZONE' },
-                            { icon: '🎧', text: 'K-Pop Playtime', val: '999k MIN' },
+                            { icon: '🎧', text: 'Music Playtime', val: '999k MIN' },
                             { icon: '🚀', text: 'Zajebistość', val: 'INFINITY' }
                         ];
             
                         let startY = 1240;
                         stats.forEach((stat) => {
-                            // Cienka biała linia oddzielająca
-                            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-                            ctx.fillRect(150, startY, 780, 2);
-                            
-                            // Ikona i tekst (po lewej)
-                            ctx.fillStyle = '#ffffff';
-                            ctx.font = '400 40px Poppins, sans-serif';
-                            ctx.fillText(`${stat.icon}  ${stat.text}`, 150, startY + 50);
-                            
-                            // Wartość (po prawej, czcionka z kodowania)
-                            ctx.textAlign = 'right';
-                            ctx.fillStyle = '#10b981';
-                            ctx.font = '600 40px Fira Code, monospace';
-                            ctx.fillText(stat.val, 930, startY + 50);
-                            ctx.textAlign = 'left';
-            
-                            startY += 110;
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; ctx.fillRect(150, startY, 780, 2);
+                            ctx.fillStyle = '#ffffff'; ctx.font = '400 40px Poppins, sans-serif'; ctx.fillText(`${stat.icon}  ${stat.text}`, 150, startY + 50);
+                            ctx.textAlign = 'right'; ctx.fillStyle = '#10b981'; ctx.font = '600 40px Fira Code, monospace'; ctx.fillText(stat.val, 930, startY + 50);
+                            ctx.textAlign = 'left'; startY += 110;
                         });
             
-                        // Minimalistyczny dolny napis
-                        ctx.textAlign = 'center'; 
-                        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'; 
-                        ctx.font = '300 35px Poppins, sans-serif'; 
-                        ctx.fillText('STATUS: W 1% NAJLEPSZYCH SIÓSTR NA ŚWIECIE ❤️', 540, 1800);
+                        ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'; ctx.font = '300 35px Poppins, sans-serif'; ctx.fillText('STATUS: W 1% NAJLEPSZYCH SIÓSTR NA ŚWIECIE ❤️', 540, 1800);
             
                         try {
                             const link = document.createElement('a'); link.download = 'Urodzinowe_Stats_2026.png'; link.href = cvs.toDataURL('image/png'); link.click();
@@ -328,9 +377,7 @@
                         }
                         autoScroll();
                     };
-                    img.onerror = () => {
-                        termOutput.appendChild(createTermLine("Błąd pobierania zdjęcia. Upewnij się, że plik ok.jpg jest w tym samym folderze co kod!", "term-red")); autoScroll();
-                    };
+                    img.onerror = () => { termOutput.appendChild(createTermLine("Błąd pobierania zdjęcia. Upewnij się, że plik ok.jpg jest w tym samym folderze co kod!", "term-red")); autoScroll(); };
                 }
                 else if (lowerVal === './prezent.sh' || lowerVal === 'bash prezent.sh') { inputWrapper.style.display = 'none'; await triggerFakeWipe(); } 
                 else { termOutput.appendChild(createTermLine(funnyErrors[Math.floor(Math.random() * funnyErrors.length)], "term-red")); }
@@ -345,7 +392,7 @@
             await new Promise(r => setTimeout(r, 1200));
             const termScreen = document.getElementById('terminal-screen'); const cardScreen = document.getElementById('card-screen'); const matrixCanvas = document.getElementById('matrix-canvas');
             termScreen.style.opacity = '0';
-            setTimeout(() => { termScreen.style.display = 'none'; matrixCanvas.style.opacity = '0.75'; cardScreen.style.opacity = '1'; cardScreen.style.pointerEvents = 'auto'; cardScreen.classList.add('visible'); }, 1000);
+            setTimeout(() => { termScreen.style.display = 'none'; cardScreen.style.opacity = '1'; cardScreen.style.pointerEvents = 'auto'; cardScreen.classList.add('visible'); }, 1000);
         }
 
         // Return from Card to Terminal
@@ -360,7 +407,7 @@
             termScreen.style.display = 'flex'; setTimeout(() => { termScreen.style.opacity = '1'; }, 50); termOutput.innerHTML = '';
             const restoreLines = ["INITIATING SYSTEM RESTORE...", "RECOVERING DATABASE... [OK]", "RESTORING ANIME WATCH HISTORY... [OK]", "SYSTEM RESTORE COMPLETE.", "Witaj ponownie, Hackerze."];
             for (let line of restoreLines) { termOutput.appendChild(createTermLine(line, "term-sys")); autoScroll(); await new Promise(r => setTimeout(r, 200 + Math.random() * 150)); }
-            inputWrapper.style.display = 'flex'; cmdInput.focus();
+            inputWrapper.style.display = 'flex'; document.getElementById('cmd-input').focus();
         }
 
         // Easter Eggs
@@ -402,6 +449,30 @@
         document.getElementById('mini-game-btn').addEventListener('click', () => { initGame(); document.getElementById('game-modal').classList.add('active'); });
         function closeGameModal() { document.getElementById('game-modal').classList.remove('active'); }
 
+        // Kotek Interakcja JS
+        function pokeCat() {
+            const cat = document.getElementById('virtual-cat');
+            const face = document.getElementById('cat-face');
+            const msg = document.getElementById('cat-msg');
+            
+            if(cat.classList.contains('active')) return;
+            
+            cat.classList.add('active');
+            msg.classList.add('show');
+            
+            const sounds = ["Miau 💖", "Purr... 💻", "*mruczy*", "Kocham Cię! 😻", "System hacked! 🐾"];
+            const faces = ["(=^>ω<^=)", "(=^OωO^=)", "(=✧ω✧=)", "(=^-ω-^=)"];
+            
+            msg.innerText = sounds[Math.floor(Math.random() * sounds.length)];
+            face.innerText = faces[Math.floor(Math.random() * faces.length)];
+            
+            setTimeout(() => {
+                cat.classList.remove('active');
+                msg.classList.remove('show');
+                face.innerText = "(=^･ω･^=)";
+            }, 2500);
+        }
+
         // Cake & Candles Logic
         let blownCandles = 0; let micStream = null; let audioContext = null;
         document.getElementById('cake-btn').addEventListener('click', () => { 
@@ -416,7 +487,7 @@
                 flame.classList.add('blown-out'); blownCandles++;
                 if (blownCandles === 3) {
                     setTimeout(() => {
-                        closeCakeModal(); // Zamknij tort, aby odsłonić okienko z życzeniem
+                        closeCakeModal(); 
                         showModal("Życzenie pomyślane! 🎂", "var(--term-green)");
                     }, 500);
                 }
